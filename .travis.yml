@@ -1,0 +1,21 @@
+sudo: required
+
+language: java
+jdk:
+  - oraclejdk8
+
+cache:
+  directories:
+  - $HOME/.m2
+
+services:
+  - docker
+
+script:
+  - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - mvn -f auth-service package docker:build -DpushImage
+  - mvn -f config-service package docker:build -DpushImage
+  - mvn -f discovery-service package docker:build -DpushImage
+  - mvn -f edge-service package docker:build -DpushImage
+  - mvn -f kaiten-sushi-web package docker:build -DpushImage
+  - mvn -f user-service package docker:build -DpushImage
